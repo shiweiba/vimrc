@@ -161,7 +161,47 @@ autocmd FileType octave let b:match_words = '\<if\>\|\<while\>\|\<for\>\|\<switc
 
 
 
-
+"""""""""""""""""""""""""""""""""""""""""""""""""""""
+"自动插入文件头信息
+""定义函数SetTitle，自动插入文件头 
+autocmd BufNewFile *.py,*.cpp,*.sh,*.java exec ":call SetTitle()"
+func SetTitle() 
+    "如果文件类型为.sh文件 
+    if &filetype == 'sh'
+        call setline(1,"\#!/bin/bash") 
+        call append(line("."), "# Author: TianJun") 
+        call append(line(".")+1, "# Created Time: ".strftime("%c")) 
+        call append(line(".")+2, "# Mail: find_my_way@foxmail.com")
+        call append(line(".")+3, "")
+    elseif &filetype == 'cpp'
+        call setline(1,"// File Name: ".expand("%")) 
+        call append(line("."), "// Author: TianJun") 
+        call append(line(".")+1, "// Created Time: ".strftime("%c"))  
+        call append(line(".")+2, "# Mail: find_my_way@foxmail.com")
+        call append(line(".")+3, "") 
+        call append(line(".")+4, "#include<iostream>")
+        call append(line(".")+5,"")
+        call append(line(".")+6, "using namespace std;")
+        call append(line(".")+7, "int main(){")
+        call append(line(".")+8, "")
+        call append(line(".")+9, "    return 0")
+        call append(line(".")+10,"}")
+    elseif &filetype == 'python'
+        call setline(1,"#!/usr/bin/env python") 
+        call append(line("."), "#-*-coding:utf-8-*-") 
+        call append(line(".")+1, "# Author: TianJun") 
+        call append(line(".")+2, "# Created Time: ".strftime("%c")) 
+        call append(line(".")+3, "") 
+    else
+        call setline(1,"/*")
+        call append(line("."), "* Author: TianJun") 
+        call append(line(".")+1, "* Created Time: ".strftime("%c"))  
+        call append(line(".")+2, "*/") 
+        call append(line(".")+3, "") 
+    endif
+    "新建文件后，自动定位到文件末尾
+    autocmd BufNewFile * normal G
+endfunc
 """""""""""""""""""""""""""""""""""""""""""""""""""""
 "自动补全
 "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
