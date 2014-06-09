@@ -16,8 +16,13 @@ set acd
 set backspace=indent,eol,start
 set autoindent " same level indent
 set smartindent " next level indent
+set sw=4 sts=4 
+set sta
+set expandtab
 autocmd FileType python setlocal foldmethod=indent
 autocmd FileType python setlocal et sta sw=4 sts=4
+autocmd FileType mkd setlocal et sta sw=4 sts=4
+autocmd FileType yaml setlocal sw=2 sts=2
 
 
 
@@ -41,6 +46,7 @@ noremap L $
 "tag
 map <F9> :!ctags -R<cr>
 imap <F9> <esc>:ctags -R<cr>
+autocmd FileType python nnoremap <buffer> <F6> :!python %<cr>
 autocmd FileType python nnoremap <buffer> <F5> :!python3 %<cr>
 
 "----------------vundle 插件管理---------------
@@ -107,6 +113,16 @@ let Tlist_Use_Horiz_Window = 0
 let Tlist_Use_Right_Window = 0
 let Tlist_WinWidth = 25
 let Tlist_Use_Right_Window = 1
+
+"------vim-markdown-mode
+Bundle 'plasticboy/vim-markdown'
+let g:vim_markdown_initial_foldlevel=1
+let g:vim_markdown_folding_disabled=1
+
+"------vim-markdown-preview
+Bundle 'borismus/markdown-preview'
+
+
 
 "------状态条
 Bundle 'Lokaltog/vim-powerline'
@@ -188,7 +204,7 @@ let g:pymode_doc_key = '<S-k>'
 " "Linting
  let g:pymode_lint = 1
  let g:pymode_lint_checker = "pyflakes,pep8,pep257 "
- let g:pymode_lint_ignore = "E226"
+ "let g:pymode_lint_ignore = "E226"
 let g:pymode_lint_on_write = 1
  let g:pymode_lint_message = 0
 " " Auto check on save
@@ -295,16 +311,11 @@ let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 "------自动插入模板
 Bundle 'Shougo/neosnippet'
 Bundle 'Shougo/neosnippet-snippets'
-
-
-filetype plugin indent on     " required!
-
 " Plugin key-mappings.
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
 
-" SuperTab like snippets behavior.
 "imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 "\ "\<Plug>(neosnippet_expand_or_jump)"
 "\: pumvisible() ? "\<C-n>" : "\<TAB>"
@@ -316,4 +327,8 @@ xmap <C-k>     <Plug>(neosnippet_expand_target)
 if has('conceal')
   set conceallevel=2 concealcursor=i
 endif
+
+
+
+filetype plugin indent on     " required!
 
