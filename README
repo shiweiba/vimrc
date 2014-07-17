@@ -1,6 +1,6 @@
-这是我的vim配置文件。平时用来写python,偶尔用来写点matlab
+这是我的vim配置文件。平时用来写python.
 
-将左边打``大写``键设置为ctrl键，方便点
+将左边打 大写键 设置为 ctrl键 ，方便点
 
-``setxkbmap -option ctrl:nocaps``
+    setxkbmap -option ctrl:nocaps
 
