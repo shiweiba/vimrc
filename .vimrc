@@ -1,161 +1,120 @@
-"--------------基本设置----------------------
-"1. Set up Vundle first:
-"$ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-"2. move this config file into ~/.vimrc
-"3. open vim, ignore warnings, in cmd mode, ``:PluginInstall``
-"4. cd ~/.vim/bundle/YouCompleteMe/
-"5. run ``./install.py``
-
-syntax on
-set fileencoding=utf-8
-set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
-set langmenu=zh_CN.UTF-8
-language messages zh_CN.UTF-8
-set clipboard=unnamedplus
-set foldlevel=99
-set ruler
-set showcmd
+" 显示行号
 set number
-set mouse-=a
-set hlsearch
-"自动切换目录
-set acd
+" 显示标尺
+set ruler
+" 历史纪录
+set history=1000
+" 输入的命令显示出来，看的清楚些
+set showcmd
+" 状态行显示的内容
+set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m/%y\ -\ %H:%M\")}
+" 启动显示状态行1，总是显示状态行2
+set laststatus=2
+" 语法高亮显示
+syntax on
+set fileencodings=utf-8,gb2312,gbk,cp936,latin-1
+set fileencoding=utf-8
+set termencoding=utf-8
+set fileformat=unix
+set encoding=utf-8
+" 配色方案
+colorscheme desert
+" 指定配色方案是256色
+set t_Co=256
+
+set wildmenu
+
+" 去掉有关vi一致性模式，避免以前版本的一些bug和局限，解决backspace不能使用的问题
+set nocompatible
 set backspace=indent,eol,start
-set autoindent " same level indent
-set smartindent " next level indent
-set sw=4 sts=4 
-set sta
+set backspace=2
+
+" 启用自动对齐功能，把上一行的对齐格式应用到下一行
+set autoindent
+
+" 依据上面的格式，智能的选择对齐方式，对于类似C语言编写很有用处
+set smartindent
+
+" vim禁用自动备份
+set nobackup
+set nowritebackup
+set noswapfile
+
+" 用空格代替tab
 set expandtab
-autocmd FileType python setlocal foldmethod=indent
-autocmd FileType python setlocal et sta sw=4 sts=4
-autocmd FileType mkd setlocal et sta sw=4 sts=4
-autocmd FileType yaml setlocal sw=2 sts=2
 
+" 设置显示制表符的空格字符个数,改进tab缩进值，默认为8，现改为4
+set tabstop=4
 
-"----------------快捷键-----------------
-"按kj 从insert模式切换到normal模式
-inoremap kj <Esc>
-set pastetoggle=<F12>
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+" 统一缩进为4，方便在开启了et后使用退格(backspace)键，每次退格将删除X个空格
+set softtabstop=4
 
+" 设定自动缩进为4个字符，程序中自动缩进所使用的空白长度
+set shiftwidth=4
 
-"重定义<leader>
-let mapleader = ','
-let g:mapleader = ','
-let maplocalleader = ','
-noremap H 0
-noremap L $
+" 设置帮助文件为中文(需要安装vimcdoc文档)
+set helplang=cn
 
-map <leader>y "+y
-map <leader>p "+p
+" 显示匹配的括号
+set showmatch
 
-"----------------vundle 插件管理---------------
-set nocompatible              " be iMproved, required
-filetype off                  " required
+" 文件缩进及tab个数
+au FileType html,python,vim,javascript setl shiftwidth=4
+au FileType html,python,vim,javascript setl tabstop=4
+au FileType java,php setl shiftwidth=4
+au FileType java,php setl tabstop=4
+" 高亮搜索的字符串
+set hlsearch
+
+" 检测文件的类型
+filetype on
+filetype plugin on
+filetype indent on
+
+" C风格缩进
+set cindent
+set completeopt=longest,menu
+
+" 功能设置
+
+" 去掉输入错误提示声音
+set noeb
+" 自动保存
+set autowrite
+" 突出显示当前行 
+set cursorline
+" 突出显示当前列
+set cursorcolumn
+"设置光标样式为竖线vertical bar
+" Change cursor shape between insert and normal mode in iTerm2.app
+"if $TERM_PROGRAM =~ "iTerm"
+let &t_SI = "\<Esc>]50;CursorShape=1\x7" " Vertical bar in insert mode
+let &t_EI = "\<Esc>]50;CursorShape=0\x7" " Block in normal mode
+"endif
+" 共享剪贴板
+set clipboard+=unnamed
+" 文件被改动时自动载入
+set autoread
+" 顶部底部保持3行距离
+set scrolloff=3
+
+filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-
 Plugin 'VundleVim/Vundle.vim'
 
-"+++++++ 主题颜色 [插件] +++++++
-Plugin 'altercation/vim-colors-solarized'
-
-"+++++++ 浏览文件夹 [插件] +++++++
+"################### 导航 ###################"
+"目录导航
 Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
+map <leader>n :NERDTreeToggle<CR>
+let NERDTreeHighlightCursorline=1
+let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
+let g:netrw_home='~/bak'
+"close vim if the only window left open is a NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | end
 
-"+++++++ 状态栏 [插件] +++++++
-Plugin 'bling/vim-airline'
-
-"+++++++ 括号匹配 [插件] +++++
+"括号显示增强
 Plugin 'kien/rainbow_parentheses.vim'
-
-"+++++++ tab 提示 [插件] +++++
-Plugin 'nathanaelkane/vim-indent-guides'
-
-"+++++++ 自动匹配 [插件] +++++
-Plugin 'Valloric/YouCompleteMe'
-
-"+++++++ 引号括号配对 [插件] +++++
-Plugin 'Raimondi/delimitMate'
-
-"+++++++ 自动注释 [插件] ++++
-Plugin 'scrooloose/nerdcommenter'
-
-"+++++++ 引号括号环绕 [插件] +++
-Plugin 'tpope/vim-surround'
-
-"+++++++ python 高亮 [插件] +++ 
-Plugin 'hdima/python-syntax'
-
-"+++++++ 扩展选定区域 [插件] +++
-Plugin 'terryma/vim-expand-region'
-
-"+++++++ clojure 相关插件 +++
-Plugin 'guns/vim-clojure-static'
-Plugin 'guns/vim-clojure-highlight'
-Plugin 'guns/vim-sexp'
-Plugin 'tpope/vim-fireplace'
-Plugin 'clojure-emacs/cider-nrepl'
-
-"+++++++ repeat +++
-Plugin 'tpope/vim-repeat'
-
-"+++++++ auto-save +++
-Plugin '907th/vim-auto-save'
-
-
-call vundle#end()            " required
-filetype plugin indent on    " required
-
-
-
-"+++++++ 主题颜色 [配置]+++++++
-syntax enable
-set t_Co=256
-colorscheme solarized
-hi Normal ctermbg=232
-hi LineNr ctermbg=233
-hi CursorLine ctermbg=8
-hi TabLine ctermbg=8
-hi Pmenu ctermbg=11 ctermfg=00
-hi PmenuSel ctermbg=00 ctermfg=10
-
-
-"+++++++ 浏览文件夹 [配置] +++++++
-autocmd vimenter * NERDTree
-let g:nerdtree_tabs_open_on_console_startup=1
-let g:nerdtree_tabs_focus_on_files=1
-
-"++++++ 状态栏 [配置] +++++++++++++
-"在家目录下新建一个.fonts文件夹： $ mkdir ~/.fonts 然后 $ cd ~/.fonts 进入文件夹，执行 $git clone git@github.com:Lokaltog/powerline-fonts.git 下载已经打过补丁的字体文件。此时， ~/.fonts/ 目录下已经存在打过补丁的常用系统字体文件了。运行 $ fc-cache -vf ~/.fonts 安装patched fonts到系统中。设置终端字体为打过补丁的字体
-" airline设置
-set laststatus=2
-" 使用powerline打过补丁的字体
-let g:airline_powerline_fonts = 1
-" 开启tabline
-let g:airline#extensions#tabline#enabled = 1
-" tabline中当前buffer两端的分隔字符
-let g:airline#extensions#tabline#left_sep = ' '
-" tabline中未激活buffer两端的分隔字符
-let g:airline#extensions#tabline#left_alt_sep = '|'
-" tabline中buffer显示编号
-let g:airline#extensions#tabline#buffer_nr_show = 1
-" 映射切换buffer的键位
-nnoremap [b :bp<CR>
-nnoremap ]b :bn<CR>
-
-
-
-"+++++++++ 括号 [配置] ++++++++
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
 let g:rbpt_colorpairs = [
     \ ['brown',       'RoyalBlue3'],
     \ ['Darkblue',    'SeaGreen3'],
@@ -168,38 +127,70 @@ let g:rbpt_colorpairs = [
     \ ['gray',        'RoyalBlue3'],
     \ ['black',       'SeaGreen3'],
     \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['darkred',     'DarkOrchid3'],
     \ ['Darkblue',    'firebrick3'],
     \ ['darkgreen',   'RoyalBlue3'],
     \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
     \ ['red',         'firebrick3'],
     \ ]
+let g:rbpt_max = 40
+let g:rbpt_loadcmd_toggle = 0
 
-"++++++++ tab 提示 [配置] ++++++++++
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_auto_colors = 0
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=233
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=234
+"主题 molokai
+Plugin 'tomasr/molokai'
+let g:molokai_original = 1
 
-"++++++++ python 高亮 [配置] +++++++
+"快速 加减注释
+Plugin 'scrooloose/nerdcommenter'
+let g:NERDSpaceDelims = 1
+let g:NERDCompactSexyComs = 1
+let g:NERDDefaultAlign = 'left'
+let g:NERDAltDelims_java = 1
+let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }
+let g:NERDCommentEmptyLines = 1
+let g:NERDTrimTrailingWhitespace = 1
+let g:NERDToggleCheckAllLines = 1
+
+" 快速加入修改环绕字符
+Plugin 'tpope/vim-surround'
+"for repeat -> enhance surround.vim, . to repeat command
+Plugin 'tpope/vim-repeat'
+
+"自动补全单引号，双引号等
+Plugin 'Raimondi/delimitMate'
+" for python docstring ",优化输入
+au FileType python let b:delimitMate_nesting_quotes = ['"']
+
+" for python.vim syntax highlight
+Plugin 'hdima/python-syntax'
 let python_highlight_all = 1
 
-"+++++++ delimitMate [配置] +++++
-imap <C-l> <Plug>delimitMateS-Tab
+"edit history, 可以查看回到某个历史状态
+Plugin 'sjl/gundo.vim'
+nnoremap <leader>h :GundoToggle<CR>
 
-"+++++++ nerd tree git [配置] +++
-let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "✹",
-    \ "Staged"    : "✚",
-    \ "Untracked" : "✭",
-    \ "Renamed"   : "➜",
-    \ "Unmerged"  : "═",
-    \ "Deleted"   : "✖",
-    \ "Dirty"     : "✗",
-    \ "Clean"     : "✔︎",
-    \ "Unknown"   : "?"
-    \ }
+" end turn on
+filetype plugin indent on
+filetype plugin on
 
-"++++++ auto save comfig +++++
-let g:auto_save = 1 " 开启自动保存
-let g:auto_save_in_insert_mode = 0 "插入模式下不保存
+call vundle#end()
+
+"""""""""""plugin configuration"""""""""""""""""""
+"NERDTree
+"F2开启和关闭树"
+"map <F2> :NERDTreeToggle<CR>
+"let NERDTreeChDirMode=1
+""显示书签"
+"let NERDTreeShowBookmarks=1
+"设置忽略文件类型"
+"let NERDTreeIgnore=['\~$', '\.pyc$', '\.swp$']
+""窗口大小"
+"let NERDTreeWinSize=25
+
+"indentLine
+"缩进指示线"
+let g:indentLine_char='|'
+let g:indentLine_enabled=1
+
+
+
